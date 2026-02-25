@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Busca de Aulas - Acupuntura & Terapias</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="glass-background"></div>
+    <div class="app-container">
+        <!-- Cabeçalho -->
+        <header>
+            <div class="header-content">
+                <h1>BuscAulas</h1>
+                <p>O seu guia inteligente de consultas</p>
+
+                <div class="tabs-container">
+                    <button id="tabSearch" class="tab-btn active">Pesquisar</button>
+                    <button id="tabBrowse" class="tab-btn">Explorar Módulos</button>
+                </div>
+
+                <div class="search-box" id="searchBoxContainer">
+                    <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" id="searchInput"
+                        placeholder="Digite sobre o que você quer relembrar... (ex: insônia, moxa, yin)"
+                        autocomplete="off">
+                    <button id="clearBtn" class="clear-btn" aria-label="Limpar busca">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Resultados -->
+        <!-- Resultados Busca -->
+        <main id="searchView">
+            <div id="loading" class="state-message" style="display: none;">
+                <div class="spinner"></div>
+                <p>Carregando banco de conhecimento...</p>
+            </div>
+
+            <div id="statsBar" class="stats-bar" style="display: none;">
+                <span id="resultCount">0 resultados encontrados</span>
+                <span class="tip">✨ Dica: Digite palavras completas para uma busca mais precisa</span>
+            </div>
+
+            <div id="resultsContainer" class="results-grid">
+                <!-- Os cards de resultado serão injetados aqui via JS -->
+            </div>
+
+            <div id="emptyState" class="state-message">
+                <div class="icon-circle">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                    </svg>
+                </div>
+                <h3>Pronto para ajudar!</h3>
+                <p>Digite acima o termo que você quer pesquisar nos materiais do curso.</p>
+            </div>
+
+            <div id="noResults" class="state-message" style="display: none;">
+                <div class="icon-circle">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </div>
+                <h3>Puxa, nenhum resultado encontrado.</h3>
+                <p>Tente procurar por palavras mais simples ou abra a busca.</p>
+            </div>
+        </main>
+
+        <!-- View Explorar Estrutura -->
+        <main id="browseView" style="display: none;">
+            <div class="browse-header">
+                <h2>Conteúdo do Curso</h2>
+                <p>Selecione um módulo e uma aula para ler a transcrição completa.</p>
+            </div>
+            <div id="modulesContainer" class="modules-grid">
+                <!-- Módulos gerados via JS -->
+            </div>
+        </main>
+
+        <footer>
+            <p>Criado com 💜 para facilitar os estudos - Baseado nas transcrições locais</p>
+        </footer>
+    </div>
+
+    <!-- Modal para a transcrição completa -->
+    <div id="fullTextModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-titles">
+                    <span id="modalModule" class="module-badge">Módulo</span>
+                    <h2 id="modalAulaTitle" class="aula-title">Título</h2>
+                </div>
+                <div class="modal-actions">
+                    <div class="modal-search-box">
+                        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <input type="text" id="modalSearchInput" placeholder="Buscar nesta aula..." autocomplete="off">
+                    </div>
+                    <button id="closeModalBtn" class="close-btn" aria-label="Fechar">&times;</button>
+                </div>
+            </div>
+            <div class="modal-body" id="modalTextBody">
+                <!-- O texto completo será inserido aqui via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Carrega a base de dados dinamicamente sem problemas de CORS -->
+    <script src="database.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
